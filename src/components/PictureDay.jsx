@@ -5,6 +5,7 @@ import "./PictureDay.css";
 const PictureDay = () => {
   const [Image, setImage] = useState({});
   const [Load, setLoad] = useState(false);
+
   useEffect(async () => {
     setLoad(true);
     try {
@@ -17,6 +18,7 @@ const PictureDay = () => {
       console.log(error);
     }
   }, []);
+
   return !Load ? (
     <div
       className="blog-card spring-fever"
