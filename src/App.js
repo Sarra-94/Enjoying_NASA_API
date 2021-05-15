@@ -1,23 +1,42 @@
-import logo from './logo.svg';
-import './App.css';
-
+import { useEffect, useState } from "react";
+import "./App.css";
+import Map from "./components/Map";
+import axios from "axios";
+import Loading from "./components/Loading";
+import Header from "./components/Header";
+import { Switch, Route } from "react-router-dom";
+import PictureDay from "./components/PictureDay";
 function App() {
+  const [eventData, setEventData] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(async () => {
+    setLoading(true);
+    try {
+      let result = await axios.get(
+        "https://eonet.sci.gsfc.nasa.gov/api/v2.1/events"
+      );
+      setEventData(result.data.events);
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      {/* <Navbar /> */}
+      <Header />
+      <Switch>
+        {" "}
+        <Route
+          exact
+          path="/"
+          render={(props) => (
+            <Map eventData={eventData} {...props} loading={loading} />
+          )}
+        />
+        <Route path="/photo" component={PictureDay} />
+      </Switch>
     </div>
   );
 }
